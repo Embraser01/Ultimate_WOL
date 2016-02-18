@@ -1,6 +1,8 @@
 package com.embraser01.android.ultimate_wol;
 
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +35,7 @@ public class MyComputerRecyclerViewAdapter extends RecyclerView.Adapter<MyComput
 
         // TODO Adapt data displayed
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getId());
+        holder.mIdView.setText("Item n°" + String.format("%d", mValues.get(position).getId()));
         holder.mContentView.setText(mValues.get(position).getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

@@ -3,8 +3,8 @@ package com.embraser01.android.ultimate_wol;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.embraser01.android.recyclerview.LinearLayoutManager;
 import com.embraser01.android.ultimate_wol.model.Computer;
 import com.embraser01.android.ultimate_wol.model.ListComputer;
 
@@ -65,7 +66,23 @@ public class MainActivity extends AppCompatActivity
 
         // specify an adapter (see also next example)
         ListComputer myDataSet = new ListComputer();
-        myDataSet.addComputer(new Computer("Test","fdgsdg","fdsg","fdsgdfg"));
+        myDataSet.addComputer(new Computer("Test", "fdgsdg", "fdsg", "fdsgdfg"));
+
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                Snackbar.make(viewHolder.itemView, "You swipe to the " + ((direction == ItemTouchHelper.LEFT) ? "left" : "right"), Snackbar.LENGTH_LONG).show();
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+
+        itemTouchHelper.attachToRecyclerView(this.mRecyclerView);
 
         mAdapter = new MyComputerRecyclerViewAdapter(myDataSet.getList(), this);
         mRecyclerView.setAdapter(mAdapter);
@@ -130,6 +147,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Computer mItem) {
-        Snackbar.make(this.mRecyclerView,"You click item " + mItem.getId(), Snackbar.LENGTH_LONG);
+        Snackbar.make(this.mRecyclerView, "You click item " + mItem.getId(), Snackbar.LENGTH_LONG).show();
     }
 }
