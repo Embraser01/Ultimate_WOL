@@ -1,9 +1,11 @@
 package com.embraser01.android.ultimate_wol.model;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.text.format.DateFormat;
 
-public class Computer {
+public class Computer implements Parcelable {
 
     private int id;
     private String name;
@@ -31,6 +33,16 @@ public class Computer {
         this.port = port;
         this.last_used = last_used;
         this.used_cnt = used_cnt;
+    }
+
+    private Computer(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        mac = in.readString();
+        ip = in.readString();
+        port = in.readString();
+        last_used = in.readString();
+        used_cnt = in.readInt();
     }
 
     public int getId() {
@@ -101,4 +113,32 @@ public class Computer {
                 ", used_cnt=" + used_cnt +
                 '}';
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeString(mac);
+        dest.writeString(ip);
+        dest.writeString(port);
+        dest.writeString(last_used);
+        dest.writeInt(used_cnt);
+    }
+
+    public static final Parcelable.Creator<Computer> CREATOR = new Parcelable.Creator<Computer>() {
+        public Computer createFromParcel(Parcel in) {
+            return new Computer(in);
+        }
+
+        public Computer[] newArray(int size) {
+            return new Computer[size];
+        }
+    };
+
+
 }

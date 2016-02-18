@@ -1,5 +1,6 @@
 package com.embraser01.android.ultimate_wol;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -18,8 +19,6 @@ import android.view.MenuItem;
 import com.embraser01.android.recyclerview.LinearLayoutManager;
 import com.embraser01.android.ultimate_wol.model.Computer;
 import com.embraser01.android.ultimate_wol.model.ListComputer;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, OnListFragmentInteractionListener {
@@ -40,8 +39,8 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, NewActivity.class);
+                startActivityForResult(intent, 1337);
             }
         });
 
@@ -55,6 +54,19 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         initRecyclerView();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(resultCode != RESULT_OK) return;
+
+        switch (requestCode){
+            case 1337:
+                Computer computer = data.getParcelableExtra("New_computer");
+                Snackbar.make(this.mRecyclerView, "Receive from NewActivity " + computer.toString(), Snackbar.LENGTH_LONG).show();
+                break;
+        }
     }
 
     private void initRecyclerView() {

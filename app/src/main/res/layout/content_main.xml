@@ -4,8 +4,6 @@
     android:id="@+id/computer_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
     android:layout_marginTop="56dp"
     tools:context=".MainActivity"
     tools:listitem="@layout/computer_item" />
