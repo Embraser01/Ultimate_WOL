@@ -1,24 +1,32 @@
 package com.embraser01.android.ultimate_wol;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 
 import com.embraser01.android.ultimate_wol.model.Computer;
+import com.embraser01.android.ultimate_wol.model.ListComputer;
 
 import java.util.List;
 
 public class MyComputerRecyclerViewAdapter extends RecyclerView.Adapter<MyComputerRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Computer> mValues;
+    private final ListComputer mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyComputerRecyclerViewAdapter(List<Computer> items, OnListFragmentInteractionListener listener) {
+    private Context context;
+    private int lastPosition = -1;
+
+    public MyComputerRecyclerViewAdapter(Context context, ListComputer items, OnListFragmentInteractionListener listener) {
+        this.context = context;
         mValues = items;
         mListener = listener;
     }
@@ -34,9 +42,9 @@ public class MyComputerRecyclerViewAdapter extends RecyclerView.Adapter<MyComput
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         // TODO Adapt data displayed
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText("Item n°" + String.format("%d", mValues.get(position).getId()));
-        holder.mContentView.setText(mValues.get(position).getName());
+        holder.mItem = mValues.getList().get(position);
+        holder.mIdView.setText("Item n°" + String.format("%d", mValues.getList().get(position).getId()));
+        holder.mContentView.setText(mValues.getList().get(position).getName());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,14 +64,33 @@ public class MyComputerRecyclerViewAdapter extends RecyclerView.Adapter<MyComput
                 return false;
             }
         });
+
+        setAnimation(holder.mView, position);
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mValues.getList().size();
     }
 
+    /**
+     * Here is the key method to apply the animation
+     */
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
 
+    @Override
+    public void onViewDetachedFromWindow(ViewHolder holder) {
+        holder.clearAnimation();
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public View mView;
@@ -77,6 +104,11 @@ public class MyComputerRecyclerViewAdapter extends RecyclerView.Adapter<MyComput
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.computer_id);
             mContentView = (TextView) view.findViewById(R.id.computer_mac);
+        }
+
+        public void clearAnimation()
+        {
+            this.mView.clearAnimation();
         }
     }
 }

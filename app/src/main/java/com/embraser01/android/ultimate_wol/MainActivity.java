@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity
     private LinearLayoutManager mLayoutManager;
     private RecyclerView.Adapter mAdapter;
 
+    private ListComputer myDataSet;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,8 @@ public class MainActivity extends AppCompatActivity
         switch (requestCode){
             case 1337:
                 Computer computer = data.getParcelableExtra("New_computer");
+                myDataSet.addComputer(computer);
+                mAdapter.notifyItemInserted(myDataSet.getList().size());
                 Snackbar.make(this.mRecyclerView, "Receive from NewActivity " + computer.toString(), Snackbar.LENGTH_LONG).show();
                 break;
         }
@@ -81,8 +85,8 @@ public class MainActivity extends AppCompatActivity
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         // specify an adapter (see also next example)
-        ListComputer myDataSet = new ListComputer();
-        myDataSet.addComputer(new Computer("Test", "fdgsdg", "fdsg", "fdsgdfg"));
+        myDataSet = new ListComputer(this);
+        //myDataSet.addComputer(new Computer("Test", "fdgsdg", "fdsg", "fdsgdfg"));
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -100,7 +104,7 @@ public class MainActivity extends AppCompatActivity
 
         itemTouchHelper.attachToRecyclerView(this.mRecyclerView);
 
-        mAdapter = new MyComputerRecyclerViewAdapter(myDataSet.getList(), this);
+        mAdapter = new MyComputerRecyclerViewAdapter(this, myDataSet, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 

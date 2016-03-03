@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.embraser01.android.ultimate_wol.model.Computer;
 
@@ -47,7 +48,7 @@ public class ComputerAdapter {
 
     public long addComputer(Computer computer) throws ReadOnlyException {
 
-        if (bdd.isReadOnly()) throw new ReadOnlyException();
+        //if (bdd.isReadOnly()) throw new ReadOnlyException();
 
         ContentValues values = new ContentValues();
 
@@ -92,7 +93,10 @@ public class ComputerAdapter {
 
         Cursor c = bdd.rawQuery("SELECT *" + " FROM " + BaseSQL.TABLE_COMPUTER, null);
 
-        while (!c.isAfterLast()) {
+        if(c.getCount() == 0) return computers;
+
+        while (c.moveToNext()) {
+            Log.d("ComputerAdapter",Integer.toString(c.getPosition()));
             computers.add(new Computer(c.getInt(BaseSQL.NUM_COL_ID),
                     c.getString(BaseSQL.NUM_COL_NAME),
                     c.getString(BaseSQL.NUM_COL_MAC),
@@ -100,7 +104,6 @@ public class ComputerAdapter {
                     c.getString(BaseSQL.NUM_COL_PORT),
                     c.getString(BaseSQL.NUM_COL_LAST_USED),
                     c.getInt(BaseSQL.NUM_COL_USED_CNT)));
-            c.moveToNext();
         }
 
         c.close();
@@ -114,13 +117,16 @@ public class ComputerAdapter {
         Cursor c = bdd.rawQuery("SELECT *" + " FROM " + BaseSQL.TABLE_COMPUTER + " WHERE _id = '" + id + "'", null);
 
         if (c.getCount() <= 0) return null;
+        c.moveToFirst();
 
-        return new Computer(c.getInt(BaseSQL.NUM_COL_ID),
+        Computer computer = new Computer(c.getInt(BaseSQL.NUM_COL_ID),
                 c.getString(BaseSQL.NUM_COL_NAME),
                 c.getString(BaseSQL.NUM_COL_MAC),
                 c.getString(BaseSQL.NUM_COL_IP),
                 c.getString(BaseSQL.NUM_COL_PORT),
                 c.getString(BaseSQL.NUM_COL_LAST_USED),
                 c.getInt(BaseSQL.NUM_COL_USED_CNT));
+        c.close();
+        return computer;
     }
 }
