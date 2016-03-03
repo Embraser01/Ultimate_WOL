@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ultimate WOL</string>
+    <string name="action_settings">Paramètres</string>
+    <string name="main_notification_added"> ajouté à la liste</string>
+    <string name="navigation_drawer_close">Ferme le menu</string>
+    <string name="navigation_drawer_open">Ouvre le menu</string>
+    <string name="main_undo_remove">Annuler</string>
+</resources>

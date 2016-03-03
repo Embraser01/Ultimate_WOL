@@ -52,6 +52,8 @@ public class ComputerAdapter {
 
         ContentValues values = new ContentValues();
 
+        if(computer.getId() != -1) values.put(BaseSQL.COL_ID, computer.getId());
+
         values.put(BaseSQL.COL_NAME, computer.getName());
         values.put(BaseSQL.COL_MAC, computer.getMac());
         values.put(BaseSQL.COL_IP, computer.getIp());

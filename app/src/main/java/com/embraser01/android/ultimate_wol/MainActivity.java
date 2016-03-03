@@ -63,14 +63,16 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if(resultCode != RESULT_OK) return;
+        if (resultCode != RESULT_OK) return;
 
-        switch (requestCode){
+        switch (requestCode) {
             case 1337:
                 Computer computer = data.getParcelableExtra("New_computer");
                 myDataSet.addComputer(computer);
                 mAdapter.notifyItemInserted(myDataSet.getList().size());
-                Snackbar.make(this.mRecyclerView, "Receive from NewActivity " + computer.toString(), Snackbar.LENGTH_LONG).show();
+                Snackbar.make(this.mRecyclerView,
+                        computer.getName() +" " + getResources().getString(R.string.main_notification_added),
+                        Snackbar.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -86,7 +88,6 @@ public class MainActivity extends AppCompatActivity
 
         // specify an adapter (see also next example)
         myDataSet = new ListComputer(this);
-        //myDataSet.addComputer(new Computer("Test", "fdgsdg", "fdsg", "fdsgdfg"));
 
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -95,8 +96,21 @@ public class MainActivity extends AppCompatActivity
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                Snackbar.make(viewHolder.itemView, "You swipe to the " + ((direction == ItemTouchHelper.LEFT) ? "left" : "right"), Snackbar.LENGTH_LONG).show();
+            public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction) {
+                myDataSet.deleteComputer(((MyComputerRecyclerViewAdapter.ViewHolder) viewHolder).mItem);
+                mAdapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+
+                Snackbar.make(viewHolder.itemView, "You swipe to the " + ((direction == ItemTouchHelper.LEFT) ? "left" : "right"), Snackbar.LENGTH_LONG).setAction(R.string.main_undo_remove, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mAdapter.notifyItemInserted(myDataSet.undo());
+                    }
+                }).setCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        myDataSet.clearPending();
+                    }
+                }).show();
             }
         };
 
@@ -157,7 +171,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
-
+            mAdapter.notifyItemRangeRemoved(0, myDataSet.size());
+            myDataSet.clear();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

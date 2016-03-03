@@ -70,7 +70,7 @@ public class MyComputerRecyclerViewAdapter extends RecyclerView.Adapter<MyComput
 
     @Override
     public int getItemCount() {
-        return mValues.getList().size();
+        return mValues.size();
     }
 
     /**
