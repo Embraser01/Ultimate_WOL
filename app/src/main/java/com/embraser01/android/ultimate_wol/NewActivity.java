@@ -12,6 +12,7 @@ import com.embraser01.android.ultimate_wol.model.Computer;
 public class NewActivity extends AppCompatActivity {
 
     private Intent result;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -5,6 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.format.DateFormat;
 
+import com.embraser01.android.ultimate_wol.net.MagicPacket;
+
 public class Computer implements Parcelable {
 
     private int id;
@@ -99,6 +101,22 @@ public class Computer implements Parcelable {
 
     public void setUsed_cnt(int used_cnt) {
         this.used_cnt = used_cnt;
+    }
+
+    public boolean isValid(){
+        try {
+            int tmp = Integer.parseInt(this.port);
+            if(tmp != 0 && tmp != 7 && tmp != 9) return false;
+
+            MagicPacket.validateMac(this.mac);
+
+        } catch (NumberFormatException ex){
+            return false;
+        } catch (IllegalArgumentException ex){
+            return false;
+        }
+
+        return true;
     }
 
     @Override

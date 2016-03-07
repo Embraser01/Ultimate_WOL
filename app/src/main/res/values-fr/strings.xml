@@ -6,4 +6,6 @@
     <string name="navigation_drawer_close">Ferme le menu</string>
     <string name="navigation_drawer_open">Ouvre le menu</string>
     <string name="main_undo_remove">Annuler</string>
+    <string name="new_name">Nom</string>
+    <string name="computer_picture">computer picture</string>
 </resources>
